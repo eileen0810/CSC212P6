@@ -2,41 +2,40 @@ package edu.smith.cs.csc212.p6;
 
 import org.junit.Test;
 
-import edu.smith.cs.csc212.p6.errors.EmptyListError;
-import edu.smith.cs.csc212.p6.errors.RanOutOfSpaceError;
+import edu.smith.cs.csc212.p6.errors.*;
 
 import org.junit.Assert;
 
-public class FixedSizeListTest {
+public class GrowableListTest {
 	@Test
 	public void testEmpty() {
-		P6List<String> data = new FixedSizeList<String>(0);
+		P6List<String> data = new GrowableList<String>();
 		Assert.assertEquals(0, data.size());
-		data = new FixedSizeList<String>(32);
+		data = new GrowableList<String>();
 		Assert.assertEquals(0, data.size());
 	}
 	
 	@Test(expected=EmptyListError.class)
 	public void testRemoveFrontCrash() {
-		P6List<String> data = new FixedSizeList<String>(4);
+		P6List<String> data = new GrowableList<String>();
 		data.removeFront();
 	}
 	
 	@Test(expected=EmptyListError.class)
 	public void testRemoveBackCrash() {
-		P6List<String> data = new FixedSizeList<String>(4);
+		P6List<String> data = new GrowableList<String>();
 		data.removeBack();
 	}
 	
 	@Test(expected=EmptyListError.class)
 	public void testRemoveIndexCrash() {
-		P6List<String> data = new FixedSizeList<String>(4);
+		P6List<String> data = new GrowableList<String>();
 		data.removeIndex(3);
 	}
 
 	@Test
 	public void testAddToFront() {
-		P6List<String> data = new FixedSizeList<String>(4);
+		P6List<String> data = new GrowableList<String>();
 		data.addFront("1");
 		Assert.assertEquals(1, data.size());
 		Assert.assertEquals("1", data.getIndex(0));
@@ -58,7 +57,7 @@ public class FixedSizeListTest {
 	
 	@Test
 	public void testAddToBack() {
-		P6List<String> data = new FixedSizeList<String>(4);
+		P6List<String> data = new GrowableList<String>();
 		data.addBack("1");
 		Assert.assertEquals(1, data.size());
 		Assert.assertEquals("1", data.getIndex(0));
@@ -82,8 +81,8 @@ public class FixedSizeListTest {
 	 * Helper method to make a full list.
 	 * @return
 	 */
-	public FixedSizeList<String> makeFullList() {
-		FixedSizeList<String> data = new FixedSizeList<String>(4);
+	public P6List<String> makeFullList() {
+		P6List<String> data = new GrowableList<String>();
 		data.addBack("a");
 		data.addBack("b");
 		data.addBack("c");
@@ -91,19 +90,16 @@ public class FixedSizeListTest {
 		return data;
 	}
 	
-	@Test(expected=RanOutOfSpaceError.class)
-	public void testAddBackFull() {
-		makeFullList().addBack("no space");
-	}
-	
-	@Test(expected=RanOutOfSpaceError.class)
-	public void testAddFrontFull() {
-		makeFullList().addFront("no space");
-	}
-	
-	@Test(expected=RanOutOfSpaceError.class)
-	public void testAddIndexFull() {
-		makeFullList().addIndex("no space", 2);
+	@Test
+	public void testAdd1000() {
+		P6List<Integer> items = new GrowableList<>();
+		for(int i=0; i<1000; i++) {
+			items.addBack(i*3);
+			Assert.assertEquals(i+1, items.size());
+		}
+		for(int i=0; i<1000; i++) {
+			Assert.assertEquals(i*3, (int) items.getIndex(i));
+		}
 	}
 	
 	@Test
@@ -134,6 +130,34 @@ public class FixedSizeListTest {
 	}
 	
 	@Test
+	public void testAddIndex() {
+		P6List<Integer> data = new GrowableList<>();
+		data.addFront(3);
+		data.addFront(2);
+		// 2 3
+		// now insert at spot 1
+		// 2 1 1 1 1 1 ... 1 1 3
+		for(int i=0; i<100; i++) {
+			data.addIndex(1, 1);
+		}
+		// 1 1 1 1 1 2 3
+		Assert.assertEquals(102, data.size());
+	}
+	@Test(expected=BadIndexError.class)
+	public void testBadIndex() {
+		P6List<Integer> data = new GrowableList<>();
+		data.addIndex(3,2);
+	}
+	
+	@Test
+	public void getFront() {
+		P6List<Integer> data = new GrowableList<>();
+		data.addIndex(1,0);
+		data.addIndex(3, 0);
+		//System.out.println(data.getIndex(0));
+		}
+	
+	@Test
 	public void testRemoveIndex() {
 		P6List<String> data = makeFullList();
 		Assert.assertEquals(4, data.size());
@@ -145,13 +169,5 @@ public class FixedSizeListTest {
 		Assert.assertEquals(1, data.size());
 		Assert.assertEquals("a", data.removeIndex(0));
 		Assert.assertEquals(0, data.size());
-	}
-	
-	@Test
-	public void testFind() {
-		FixedSizeList<String> data = makeFullList();
-		Assert.assertEquals(0, data.find("a"));
-		Assert.assertEquals(-1, data.find("the"));
-		
 	}
 }

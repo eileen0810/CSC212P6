@@ -109,4 +109,37 @@ public class FixedSizeList<T> implements P6List<T> {
 		}
 		return this.getIndex(this.size()-1);
 	}
+	
+	public int find(T item) {
+		for (int i=0; i<fill; i++) {
+			//check each item one at a time
+			if (item.equals(array[i])) {
+				return i;
+			}
+		}
+		//this represents not found
+		return -1;
+	}
+	/**
+	 * arr = [1,2,3]
+	 * arr[2] = 4
+	 * arr = [1,2,4]
+	 * @param index
+	 * @param item
+	 */
+	public void setIndex(int index,T item) {
+		// Is the index too big?
+		if (index >= fill || index< 0){
+			throw new BadIndexError();
+		}
+		array[index] = item;
+	}
+	
+	public void swap(int i, int j) {
+		T a = getIndex(i);
+		T b = getIndex(j);
+		
+		setIndex(j,a);
+		setIndex(i,b);
+	}
 }

@@ -2,6 +2,7 @@ package edu.smith.cs.csc212.p6;
 
 import java.util.Iterator;
 
+import edu.smith.cs.csc212.p6.errors.BadIndexError;
 import edu.smith.cs.csc212.p6.errors.EmptyListError;
 import edu.smith.cs.csc212.p6.errors.P6NotImplemented;
 
@@ -36,12 +37,32 @@ public class SinglyLinkedList<T> implements P6List<T>, Iterable<T> {
 
 	@Override
 	public void addBack(T item) {
-		throw new P6NotImplemented();
+		Node<T> lastInList = null;
+		for (Node<T> current = this.start; current != null; current = current.next) {
+			lastInList = current;
+		}
+		if (lastInList != null) {	
+			lastInList.next = new Node<T>(item, null);
+		}else {
+			this.start = new Node<T>(item,start);
+		}
 	}
 
 	@Override
 	public void addIndex(T item, int index) {
-		throw new P6NotImplemented();
+		int at = 0;
+		
+		Node<T> last = null;
+		
+		for (Node<T> current = start; current != null; current = current.next) {
+			if (at == index) {
+				last.next = new Node<T>(item, current);
+				
+			}
+			last = current;
+			at++;
+		}
+		throw new BadIndexError();
 	}
 
 	@Override
@@ -56,9 +77,16 @@ public class SinglyLinkedList<T> implements P6List<T>, Iterable<T> {
 
 	@Override
 	public T getIndex(int index) {
-		throw new P6NotImplemented();
+		int at = 0;
+		for (Node<T> current = start; current != null; current = current.next) {
+			if (at == index) {
+				return current.value;
+			}
+			at++;
+		}
+		throw new BadIndexError();
 	}
-
+	
 	@Override
 	public int size() {
 		int count = 0;
