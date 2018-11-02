@@ -100,7 +100,7 @@ public class GrowableListTest {
 		for(int i=0; i<1000; i++) {
 			Assert.assertEquals(i*3, (int) items.getIndex(i));
 		}
-	}
+	} 
 	
 	@Test
 	public void testRemoveFront() {

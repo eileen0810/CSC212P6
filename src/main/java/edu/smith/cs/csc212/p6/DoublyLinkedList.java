@@ -1,5 +1,6 @@
 package edu.smith.cs.csc212.p6;
 
+import edu.smith.cs.csc212.p6.errors.BadIndexError;
 import edu.smith.cs.csc212.p6.errors.EmptyListError;
 import edu.smith.cs.csc212.p6.errors.P6NotImplemented;
 
@@ -21,60 +22,107 @@ public class DoublyLinkedList<T> implements P6List<T> {
 	@Override
 	public T removeFront() {
 		checkNotEmpty();
-		throw new P6NotImplemented();
+		T before = start.value;
+		start = start.after;
+		return before;
 	}
 
 	@Override
 	public T removeBack() {
 		checkNotEmpty();
-		throw new P6NotImplemented();
+		T deleteMe = end.value;
+		end= end.before;
+		end.after = null;
+		return deleteMe;
 	}
 
 	@Override
 	public T removeIndex(int index) {
 		checkNotEmpty();
-		throw new P6NotImplemented();
+		
 	}
 
 	@Override
 	public void addFront(T item) {
-		throw new P6NotImplemented();
+		Node <T>justAdded = new Node<T>(item);
+		if (this.start == null) {
+			this.start = justAdded;
+			this.end = justAdded;
+		}else {
+			this.start.before = justAdded;
+			justAdded.after = start;
+		}
+		this.start = justAdded;
 	}
 
 	@Override
 	public void addBack(T item) {
-		throw new P6NotImplemented();
+		Node <T>justAdded = new Node<T>(item);
+		if (this.end == null) {
+			this.start = justAdded;
+			this.end = justAdded;
+		}else {
+			this.end.after = justAdded;
+		}
+		this.end = justAdded;
 	}
 
 	@Override
 	public void addIndex(T item, int index) {
-		throw new P6NotImplemented();
+		int at = 0;
+		Node<T> last = null;
+		for (Node<T> current = start; current != null; current = current.after) {
+			Node<T> justAdded = new Node<T>(item);
+			if (at == index) {	
+				last.after = justAdded;
+				justAdded.before = last;
+				current.before = justAdded; 
+				justAdded.after = current;
+			}
+			last = current;
+			at++;
+		}
 	}
 
 	@Override
 	public T getFront() {
-		throw new P6NotImplemented();
+		return start.value;
 	}
 
 	@Override
 	public T getBack() {
-		throw new P6NotImplemented();
+		return end.value;
 	}
 	
 	@Override
 	public T getIndex(int index) {
 		checkNotEmpty();
-		throw new P6NotImplemented();
+		
+		int at = 0;
+		for (Node<T> current = start; current != null; current = current.after) {
+			if (at == index) {
+				return current.value;
+			}
+			at++;
+		}
+		throw new BadIndexError();
 	}
 
 	@Override
 	public int size() {
-		throw new P6NotImplemented();
+		int count = 0;
+		for (Node<T> current= this.start; current != null; current = current.after) {
+			count ++;
+		}
+		return count;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		throw new P6NotImplemented();
+		if (start == null) {
+			return true;
+		}
+		return false;
 	}
 	
 	private void checkNotEmpty() {

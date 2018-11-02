@@ -3,39 +3,38 @@ package edu.smith.cs.csc212.p6;
 import org.junit.Assert;
 import org.junit.Test;
 
-import edu.smith.cs.csc212.p6.errors.BadIndexError;
 import edu.smith.cs.csc212.p6.errors.EmptyListError;
 
-public class SinglyLinkedListTest {
+public class DoublyLinkedListTest {
 	@Test
 	public void testEmpty() {
-		P6List<String> data = new SinglyLinkedList<String>();
+		P6List<String> data = new DoublyLinkedList<String>();
 		Assert.assertEquals(0, data.size());
-		data = new SinglyLinkedList<String>();
+		data = new DoublyLinkedList<String>();
 		Assert.assertEquals(0, data.size());
 	}
 	
 	@Test(expected=EmptyListError.class)
 	public void testRemoveFrontCrash() {
-		P6List<String> data = new SinglyLinkedList<String>();
+		P6List<String> data = new DoublyLinkedList<String>();
 		data.removeFront();
 	}
 	
 	@Test(expected=EmptyListError.class)
 	public void testRemoveBackCrash() {
-		P6List<String> data = new SinglyLinkedList<String>();
+		P6List<String> data = new DoublyLinkedList<String>();
 		data.removeBack();
 	}
 	
 	@Test(expected=EmptyListError.class)
 	public void testRemoveIndexCrash() {
-		P6List<String> data = new SinglyLinkedList<String>();
+		P6List<String> data = new DoublyLinkedList<String>();
 		data.removeIndex(3);
 	}
 
 	@Test
 	public void testAddToFront() {
-		P6List<String> data = new SinglyLinkedList<String>();
+		P6List<String> data = new DoublyLinkedList<String>();
 		data.addFront("1");
 		Assert.assertEquals(1, data.size());
 		Assert.assertEquals("1", data.getIndex(0));
@@ -57,7 +56,7 @@ public class SinglyLinkedListTest {
 	
 	@Test
 	public void testAddToBack() {
-		P6List<String> data = new SinglyLinkedList<String>();
+		P6List<String> data = new DoublyLinkedList<String>();
 		data.addBack("1");
 		Assert.assertEquals(1, data.size());
 		Assert.assertEquals("1", data.getIndex(0));
@@ -88,7 +87,7 @@ public class SinglyLinkedListTest {
 	 * @return
 	 */
 	public P6List<String> makeFullList() {
-		P6List<String> data = new SinglyLinkedList<String>();
+		P6List<String> data = new DoublyLinkedList<String>();
 		data.addBack("a");
 		data.addBack("b");
 		data.addBack("c");
@@ -98,7 +97,7 @@ public class SinglyLinkedListTest {
 	
 	@Test
 	public void testAdd1000() {
-		P6List<Integer> items = new SinglyLinkedList<>();
+		P6List<Integer> items = new DoublyLinkedList<>();
 		for(int i=0; i<1000; i++) {
 			items.addBack(i*3);
 			Assert.assertEquals(i+1, items.size());
@@ -108,10 +107,13 @@ public class SinglyLinkedListTest {
 		}
 	}
 	
+	
 	@Test
 	public void testRemoveFront() {
 		P6List<String> data = makeFullList();
+		//System.out.println(data.size());
 		Assert.assertEquals(4, data.size());
+		//System.out.println(data.size());
 		Assert.assertEquals("a", data.removeFront());
 		Assert.assertEquals(3, data.size());
 		Assert.assertEquals("b", data.removeFront());
@@ -121,9 +123,11 @@ public class SinglyLinkedListTest {
 		Assert.assertEquals("d", data.removeFront());
 		Assert.assertEquals(0, data.size());
 	}
+	
+	
 	@Test
 	public void testRemoveBack() {
-		P6List<String> data = makeFullList();
+		P6List<String> data = new DoublyLinkedList<>();
 		Assert.assertEquals(4, data.size());
 		Assert.assertEquals("d", data.removeBack());
 		Assert.assertEquals(3, data.size());
@@ -132,14 +136,13 @@ public class SinglyLinkedListTest {
 		Assert.assertEquals("b", data.removeBack());
 		Assert.assertEquals(1, data.size());
 		Assert.assertEquals("a", data.removeBack());
-		System.out.println(data.size());
 		Assert.assertEquals(0, data.size());
 		
 	}
 	
 	@Test
 	public void testAddIndex() {
-		P6List<Integer> data = new SinglyLinkedList<>();
+		P6List<Integer> data = new DoublyLinkedList<>();
 		data.addFront(3);
 		data.addFront(2);
 		// 2 3
@@ -156,7 +159,7 @@ public class SinglyLinkedListTest {
 
 	@Test
 	public void getIndex() {
-		P6List<Integer> data = new SinglyLinkedList<>();
+		P6List<Integer> data = new DoublyLinkedList<>();
 		data.addBack(3);
 		data.addBack(5);
 		data.addBack(2);
@@ -193,5 +196,48 @@ public class SinglyLinkedListTest {
 		Assert.assertEquals(0, data.size());
 	}
 	
+//	@Test
+//	public void mytestaddFront() {
+//		P6List<String> data = new DoublyLinkedList<>();
+//		data.addFront("1");
+//		Assert.assertEquals(1, data.size());
+//		data.addFront("2");
+//		Assert.assertEquals(2, data.size());
+//	}
+//	
+//	@Test
+//	public void testaddBack() {
+//		P6List<String> data = new DoublyLinkedList<>();
+//		data.addFront("1");
+//		Assert.assertEquals(1, data.size());
+//		data.addBack("3");
+//		data.addBack("4");
+//		Assert.assertEquals(3, data.size());
+//		//System.out.println(data.size());
+//	}
 	
+//	@Test
+//	public void mytestremoveBack() {
+//		P6List<String> data = new DoublyLinkedList<>();
+//		data.addBack("1");
+//		data.addBack("2");
+//		data.addBack("3");
+//		
+//		Assert.assertEquals(3, data.size());
+//		Assert.assertEquals("3", data.removeBack());
+//		Assert.assertEquals(2, data.size());
+//	}
+//	
+//	@Test
+//	public void mytestgetBack() {
+//		P6List<String> data = new DoublyLinkedList<>();
+//		data.addFront("3");
+//		data.addBack("4");
+//		data.addBack("5");
+//		
+//		Assert.assertEquals(3, data.size());
+//		Assert.assertEquals("5", data.getBack());
+//		
+//	}
 }
+

@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import edu.smith.cs.csc212.p6.errors.BadIndexError;
 import edu.smith.cs.csc212.p6.errors.EmptyListError;
-import edu.smith.cs.csc212.p6.errors.P6NotImplemented;
 
 public class SinglyLinkedList<T> implements P6List<T>, Iterable<T> {
 	/**
@@ -22,12 +21,39 @@ public class SinglyLinkedList<T> implements P6List<T>, Iterable<T> {
 
 	@Override
 	public T removeBack() {
-		throw new P6NotImplemented();
+		checkNotEmpty();
+		
+		if (start.next == null ) {
+			return this.removeFront();
+		}
+		for (Node<T> current= start; current!= null; current = current.next) {
+			if(current.next.next == null) {
+				T deleteMe = current.next.value;
+				current.next = null;
+				return deleteMe;
+			}
+		}
+		return null;
 	}
-
+		
 	@Override
 	public T removeIndex(int index) {
-		throw new P6NotImplemented();
+		checkNotEmpty();
+		if (start.next == null ) {
+			return this.removeFront();
+		}
+		
+		int at = 0;
+		for (Node<T> current = start; current != null; current = current.next) {
+			
+			if (at == (index-1)) {
+				T deleteMe = current.next.value;
+				current.next = current.next.next;
+				return deleteMe;
+			}
+			at++;
+		}
+		return null;
 	}
 
 	@Override
@@ -51,18 +77,17 @@ public class SinglyLinkedList<T> implements P6List<T>, Iterable<T> {
 	@Override
 	public void addIndex(T item, int index) {
 		int at = 0;
-		
 		Node<T> last = null;
-		
 		for (Node<T> current = start; current != null; current = current.next) {
+			if (index == 0) {
+				throw new BadIndexError();
+			}
 			if (at == index) {
 				last.next = new Node<T>(item, current);
-				
 			}
 			last = current;
 			at++;
 		}
-		throw new BadIndexError();
 	}
 
 	@Override
@@ -72,7 +97,14 @@ public class SinglyLinkedList<T> implements P6List<T>, Iterable<T> {
 
 	@Override
 	public T getBack() {
-		throw new P6NotImplemented();
+		//Node<T> last = null;
+		for (Node<T> current = this.start; current != null; current = current.next) {
+			if (current.next == null) {
+				T last = current.value;
+				return last;
+			}
+		} 
+		return null;
 	}
 
 	@Override
@@ -87,8 +119,8 @@ public class SinglyLinkedList<T> implements P6List<T>, Iterable<T> {
 		throw new BadIndexError();
 	}
 	
-	@Override
-	public int size() {
+	@Override 
+	public int size() { 
 		int count = 0;
 		for (Node<T> n = this.start; n != null; n = n.next) {
 			count++;
@@ -98,7 +130,10 @@ public class SinglyLinkedList<T> implements P6List<T>, Iterable<T> {
 
 	@Override
 	public boolean isEmpty() {
-		throw new P6NotImplemented();
+		if (start != null) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
